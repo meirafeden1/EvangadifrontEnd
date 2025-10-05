@@ -1,0 +1,121 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center; /* center the container */
+  background-color: #f9f9f9;
+  color: #1a1a2e;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
+  box-sizing: border-box;
+ 
+
+}
+
+/* Container inside header to limit width */
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px; /* fixed container width */
+  padding: 0 20px; /* inner gap */
+  box-sizing: border-box;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoImg {
+  height: 30px;
+  width: auto;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  overflow-x: auto; /* allow scroll if too wide */
+}
+
+.nav::-webkit-scrollbar {
+  height: 4px;
+}
+
+.nav::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.link {
+  text-decoration: none;
+  color: #1a1a2e;
+  font-weight: 500;
+  white-space: nowrap; /* prevent breaking */
+}
+
+.link:hover {
+  color: #007bff;
+}
+
+.authBtn,
+.logoutBtn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.3s;
+  white-space: nowrap;
+}
+
+.authBtn:hover,
+.logoutBtn:hover {
+  background-color: #0056b3;
+}
+
+/* Hamburger icon for mobile */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.hamburger div {
+  width: 25px;
+  height: 3px;
+  background-color: #1a1a2e;
+  transition: all 0.3s ease;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    width: 100%;
+    display: none;
+    padding: 15px 20px;
+    gap: 15px;
+  }
+
+  .nav.active {
+    display: flex;
+  }
+}

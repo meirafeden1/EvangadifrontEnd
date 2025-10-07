@@ -10,8 +10,10 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
+    setError(""); // Clear error on change
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,14 +26,19 @@ const Login = () => {
 
     try {
       const res = await loginUser({ email, password });
-      const { token } = res.data;
+      const { token, username, userid } = res.data;
 
       setAuthToken(token);
-      login(token, res.data.username, res.data.userid);
+      login(token, username, userid);
 
-      navigate("/home"); // Redirect after login
+      navigate("/home");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Try again.");
+      // Handle API errors gracefully
+      if (err.response) {
+        setError(err.response.data.message || "Login failed. Try again.");
+      } else {
+        setError("Network error. Please check your connection.");
+      }
     }
   };
 

@@ -1,65 +1,49 @@
-import React, { createContext, useState, useEffect } from "react";
-import axios from "axios";
+import { createContext, useState, useEffect } from "react";
+import api, { setAuthToken } from "../services/api";
 
-// Create context
 export const AuthContext = createContext();
 
-// Provider component to wrap the app
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // { username, userid }
+  const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [loading, setLoading] = useState(true);
 
-  /**
-   * Check authenticated user on app start
-   * If token exists, validate it with API
-   */
+  // Attach token to API instance whenever it changes
+  useEffect(() => {
+    setAuthToken(token || null);
+  }, [token]);
+
+  // Check user on app start
   useEffect(() => {
     const checkUser = async () => {
       if (!token) {
         setLoading(false);
         return;
       }
-
       try {
-        const res = await axios.get("/api/user/checkUser", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (res.data.username && res.data.userid) {
-          setUser({ username: res.data.username, userid: res.data.userid });
-        } else {
-          throw new Error("Invalid user data");
-        }
+        const res = await api.get("/user/checkUser");
+        setUser({ username: res.data.username, userid: res.data.userid });
       } catch (err) {
         console.error("User check failed:", err);
-        logout(); // clear user and token if check fails
+        logout();
       } finally {
         setLoading(false);
       }
     };
-
     checkUser();
   }, [token]);
 
-  /**
-   * Login function
-   * Stores token in localStorage and sets user info
-   */
   const login = (token, username, userid) => {
     setToken(token);
     localStorage.setItem("token", token);
     setUser({ username, userid });
   };
 
-  /**
-   * Logout function
-   * Clears user and token
-   */
   const logout = () => {
     setUser(null);
     setToken("");
     localStorage.removeItem("token");
+    setAuthToken(null);
   };
 
   return (

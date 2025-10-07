@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./Question.module.css";
 import { useNavigate } from "react-router-dom";
 
@@ -6,13 +5,15 @@ const Question = ({ question }) => {
   const navigate = useNavigate();
 
   const handleOpenQuestion = () => {
-    navigate(`/questions/${question.id}`);
+    navigate(`/questions/${question.question_id}`);
   };
 
+  // Avatar fallback (optional)
   const avatarUrl =
-    question?.user?.avatar || "https://www.gravatar.com/avatar/?d=mp"; // fallback avatar
+    question?.user_avatar || "https://www.gravatar.com/avatar/?d=mp"; // fallback avatar
 
-  const username = question?.user?.name || "Anonymous";
+  // Username from API
+  const username = question?.user_name || "Anonymous";
 
   return (
     <div

@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Signup from "../components/Auth/Signup";
 import Login from "../components/Auth/Login";
@@ -9,7 +8,7 @@ const AuthPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Determine which form to show based on URL path
+  // Determine which form to display based on the current URL
   const isSignUp = location.pathname === "/auth/signup";
 
   return (
@@ -19,7 +18,7 @@ const AuthPage = () => {
         <div className={styles.formSide}>
           {isSignUp ? <Signup /> : <Login />}
 
-          {/* Switch buttons below form */}
+          {/* Switch between signup/login */}
           <div className={styles.switchText}>
             {isSignUp ? (
               <>
@@ -45,7 +44,7 @@ const AuthPage = () => {
           </div>
         </div>
 
-        {/* Right: About section */}
+        {/* Right: About / Info */}
         <div className={styles.aboutSide}>
           <About />
         </div>

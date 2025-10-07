@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Question from "../components/Question/Question";
 import styles from "./QuestionPage.module.css";
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/questions";
+import api from "../services/api";
+import { AuthContext } from "../context/AuthContext";
 
 const QuestionPage = () => {
+  const { token } = useContext(AuthContext);
   const [questions, setQuestions] = useState([]);
   const [search] = useState({ title: "", description: "" });
   const [newQuestion, setNewQuestion] = useState({
@@ -19,8 +19,8 @@ const QuestionPage = () => {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(API_URL);
-      setQuestions(res.data || []);
+      const res = await api.get("/question"); // API instance handles base URL + auth
+      setQuestions(res.data.questions || []);
     } catch (err) {
       console.error(err);
       setError("Failed to load questions. Please try again later.");
@@ -48,12 +48,14 @@ const QuestionPage = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post(API_URL, newQuestion);
+      const res = await api.post("/question", newQuestion); // uses token automatically
       setQuestions((prev) => [res.data, ...prev]);
       setNewQuestion({ title: "", description: "" });
     } catch (err) {
       console.error(err);
-      alert("Failed to post question. Try again.");
+      alert(
+        err.response?.data?.message || "Failed to post question. Try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -112,6 +114,13 @@ const QuestionPage = () => {
           {loading ? "Posting..." : "Post Question"}
         </button>
       </div>
+
+      {/* Questions List */}
+      {error && <p className={styles.error}>{error}</p>}
+      {filteredQuestions.map((q) => (
+        <Question key={q.question_id} question={q} />
+      ))}
+      {filteredQuestions.length === 0 && <p>No questions found.</p>}
     </div>
   );
 };

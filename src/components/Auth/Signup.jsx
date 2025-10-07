@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
 import { signupUser } from "../../services/api";
@@ -14,8 +14,10 @@ const Signup = () => {
   });
   const [error, setError] = useState("");
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
+    setError(""); // Clear error on change
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +33,11 @@ const Signup = () => {
       alert("Signup successful! Please login.");
       navigate("/auth/login");
     } catch (err) {
-      setError(err.response?.data?.message || "Signup failed. Try again.");
+      if (err.response) {
+        setError(err.response.data.message || "Signup failed. Try again.");
+      } else {
+        setError("Network error. Please check your connection.");
+      }
     }
   };
 

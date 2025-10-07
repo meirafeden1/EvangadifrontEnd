@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import { getAllQuestions } from "../services/api";
 
 const HomePage = () => {
-  const { user } = useContext(AuthContext); // Get logged-in user
+  const { user } = useContext(AuthContext);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -14,7 +14,6 @@ const HomePage = () => {
       try {
         setLoading(true);
         const res = await getAllQuestions();
-        // Expecting API to return { questions: [...] }
         setQuestions(res.data.questions || []);
       } catch (err) {
         console.error("Failed to fetch questions:", err);
@@ -37,5 +36,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-

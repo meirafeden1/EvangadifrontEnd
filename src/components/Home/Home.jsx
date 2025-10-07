@@ -19,17 +19,14 @@ const Home = ({ currentUser, questions }) => {
       <div className={styles.topRow}>
         <button
           className={styles.askButton}
-          onClick={
-            () =>
-              currentUser
-                ? navigate("/questions/post") // redirect to post question page if logged in
-                : navigate("/auth/login") // redirect to login otherwise
+          onClick={() =>
+            currentUser ? navigate("/question/post") : navigate("/auth/login")
           }
         >
           Ask Question
         </button>
         <div className={styles.welcomeText}>
-          Welcome, {currentUser?.username || "Guest"}
+          Welcome, {currentUser?.first_name || "Guest"}
         </div>
       </div>
 
@@ -45,22 +42,21 @@ const Home = ({ currentUser, questions }) => {
 
       {/* Questions list */}
       <section className={styles.usersSection}>
-        <h2>Recent Questions</h2>
         {filteredQuestions.length > 0 ? (
           filteredQuestions.map((q) => (
             <div
               key={q.question_id}
               className={styles.userRow}
-              onClick={() => navigate(`/questions/${q.question_id}`)}
+              onClick={() => navigate(`/question/${q.question_id}`)} // ✅ navigate to AnswerPage
             >
               <div className={styles.userInfo}>
                 <img
-                  src={q.user_avatar || "/default-avatar.png"}
-                  alt={q.user_name || "Anonymous"}
+                  src={q.user?.avatar || "/default-avatar.png"}
+                  alt={q.user?.first_name || "Anonymous"}
                   className={styles.avatar}
                 />
                 <span className={styles.username}>
-                  {q.user_name || "Anonymous"}
+                  {q.user?.first_name || "Anonymous"}
                 </span>
                 <span className={styles.questionPreview}>
                   {q.title.length > 50 ? q.title.slice(0, 50) + "..." : q.title}
@@ -78,5 +74,3 @@ const Home = ({ currentUser, questions }) => {
 };
 
 export default Home;
-
-

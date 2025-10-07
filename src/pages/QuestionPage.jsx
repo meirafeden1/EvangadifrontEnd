@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import Question from "../components/Question/Question";
+import { useState, useEffect, useContext } from "react";
 import styles from "./QuestionPage.module.css";
 import api from "../services/api";
 import { AuthContext } from "../context/AuthContext";
@@ -14,12 +13,13 @@ const QuestionPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState(""); //  feedback message
 
   // Fetch questions
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/question"); // API instance handles base URL + auth
+      const res = await api.get("/question");
       setQuestions(res.data.questions || []);
     } catch (err) {
       console.error(err);
@@ -33,35 +33,36 @@ const QuestionPage = () => {
     fetchQuestions();
   }, []);
 
-  // Handle input changes for both posting and search
   const handleChange = (e, stateUpdater) => {
     const { name, value } = e.target;
     stateUpdater((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Post a new question
+  // Post a new question with message feedback
   const handlePostQuestion = async () => {
     if (!newQuestion.title.trim() || !newQuestion.description.trim()) {
-      alert("Please enter both title and description.");
+      setMessage("⚠️ Please enter both title and description.");
       return;
     }
 
     try {
       setLoading(true);
-      const res = await api.post("/question", newQuestion); // uses token automatically
+      setMessage("");
+      const res = await api.post("/question", newQuestion);
       setQuestions((prev) => [res.data, ...prev]);
       setNewQuestion({ title: "", description: "" });
+      setMessage(" Question posted successfully!");
     } catch (err) {
       console.error(err);
-      alert(
-        err.response?.data?.message || "Failed to post question. Try again."
-      );
+      setMessage(err.response?.data?.message || "❌ Failed to post question.");
     } finally {
       setLoading(false);
+
+      //  Clear message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
     }
   };
 
-  // Filtered results
   const filteredQuestions = questions.filter((q) => {
     const matchTitle = q.title
       ?.toLowerCase()
@@ -74,20 +75,16 @@ const QuestionPage = () => {
 
   return (
     <div className={styles.questionPageWrapper}>
-      <h1 className={styles.pageTitle}>Questions</h1>
-
-      {/* Steps to write a good question */}
       <div className={styles.stepsSection}>
         <h2>Steps to Write a Good Question</h2>
         <ul>
-          <li>Be clear and concise</li>
-          <li>Provide context and examples</li>
-          <li>Check for duplicates</li>
-          <li>Use proper tags</li>
+          <li>➤ Be clear and concise</li>
+          <li>➤ Provide context and examples</li>
+          <li>➤ Check for duplicates</li>
+          <li>➤ Use proper tags</li>
         </ul>
       </div>
 
-      {/* Post your question */}
       <div className={styles.postSection}>
         <h2>Post Your Question</h2>
 
@@ -106,6 +103,10 @@ const QuestionPage = () => {
           onChange={(e) => handleChange(e, setNewQuestion)}
           className={styles.descriptionSearch}
         />
+
+        {/*  Show message */}
+        {message && <p className={styles.message}>{message}</p>}
+
         <button
           onClick={handlePostQuestion}
           className={styles.postButton}
@@ -116,11 +117,11 @@ const QuestionPage = () => {
       </div>
 
       {/* Questions List */}
-      {error && <p className={styles.error}>{error}</p>}
+      {/* {error && <p className={styles.error}>{error}</p>}
       {filteredQuestions.map((q) => (
         <Question key={q.question_id} question={q} />
       ))}
-      {filteredQuestions.length === 0 && <p>No questions found.</p>}
+      {filteredQuestions.length === 0 && <p>No questions found.</p>} */}
     </div>
   );
 };

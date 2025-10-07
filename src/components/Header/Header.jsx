@@ -66,7 +66,7 @@ const Header = () => {
           ) : (
             <>
               <span className={styles.welcomeText}>
-                Welcome, {user.username}
+               {user.username}
               </span>
               <button onClick={handleLogout} className={styles.logoutBtn}>
                 LOG OUT

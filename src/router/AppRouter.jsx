@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 
 import Header from "../components/Header/Header";
@@ -13,20 +14,26 @@ import HomePage from "../pages/HomePage";
 import About from "../components/About/About";
 import QuestionPage from "../pages/QuestionPage";
 import AnswerPage from "../pages/AnswerPage";
-
 import { AuthContext } from "../context/AuthContext";
 
 // Protected Route wrapper
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
+  const location = useLocation();
 
-  if (loading) return <div>Loading...</div>; // wait for context
+  if (loading)
+    return (
+      <div style={{ textAlign: "center", marginTop: "20vh" }}>
+        <div className="spinner" />
+        Checking authentication...
+      </div>
+    );
 
-  if (!user) return <Navigate to="/auth/login" />;
+  if (!user)
+    return <Navigate to="/auth/login" replace state={{ from: location }} />;
 
   return children;
 };
-
 
 const AppRouter = () => {
   return (
@@ -34,10 +41,10 @@ const AppRouter = () => {
       <Header />
 
       <Routes>
-        {/* Root redirect */}
+        {/* Default redirect */}
         <Route path="/" element={<Navigate to="/home" />} />
 
-        {/* Home page (protected) */}
+        {/* Home (protected) */}
         <Route
           path="/home"
           element={
@@ -47,7 +54,7 @@ const AppRouter = () => {
           }
         />
 
-        {/* Auth pages */}
+        {/* Auth */}
         <Route path="/auth" element={<Navigate to="/auth/login" />} />
         <Route path="/auth/login" element={<AuthPage />} />
         <Route path="/auth/signup" element={<AuthPage />} />
@@ -55,9 +62,9 @@ const AppRouter = () => {
         {/* About */}
         <Route path="/about" element={<About />} />
 
-        {/* Question pages (protected) */}
+        {/* Question */}
         <Route
-          path="/questions/:question_id"
+          path="/question/:question_id"
           element={
             <ProtectedRoute>
               <QuestionPage />
@@ -65,9 +72,9 @@ const AppRouter = () => {
           }
         />
 
-        {/* Answer pages (protected) */}
+        {/*  Fixed Answer Page Route */}
         <Route
-          path="/answers/:answer_id"
+          path="/answer/:question_id"
           element={
             <ProtectedRoute>
               <AnswerPage />
@@ -75,8 +82,8 @@ const AppRouter = () => {
           }
         />
 
-        {/* Catch-all fallback */}
-        <Route path="*" element={<Navigate to="/" />} />
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
 
       <Footer />
@@ -85,4 +92,3 @@ const AppRouter = () => {
 };
 
 export default AppRouter;
-

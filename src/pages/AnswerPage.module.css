@@ -1,0 +1,76 @@
+/* Container for the whole page */
+.answerPageWrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Top question title */
+.questionTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Answers section */
+.answersSection {
+  margin-top: 20px;
+}
+
+/* Header of answers section */
+.answersHeader {
+  font-size: 1rem;
+  color: #007bff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.arrow {
+  font-size: 1.2rem;
+}
+
+/* Community title */
+.communityTitle {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+/* Post new answer section */
+.postAnswerSection {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.postAnswerSection textarea {
+  width: 100%;
+  height: 120px;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+/* Post button */
+.postButton {
+  width: 140px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.postButton:hover {
+  background-color: #0056b3;
+}

@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 import { AuthContext } from "../../context/AuthContext";
 import logo from "../../assets/logo.png";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const Header = () => {
   const { user, logout } = useContext(AuthContext);
@@ -19,7 +18,7 @@ const Header = () => {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
-    <header className={`${styles.header} container-fluid`} >
+    <header className={styles.header}>
       <div className={styles.headerContainer}>
         {/* Left: Logo */}
         <div className={styles.logo}>
@@ -32,7 +31,7 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Hamburger for mobile */}
+        {/* Hamburger */}
         <div className={styles.hamburger} onClick={toggleMenu}>
           <div></div>
           <div></div>
@@ -55,6 +54,7 @@ const Header = () => {
           >
             How It Works
           </Link>
+
           {!user ? (
             <Link
               to="/auth"
@@ -64,9 +64,14 @@ const Header = () => {
               SIGN IN
             </Link>
           ) : (
-            <button onClick={handleLogout} className={styles.logoutBtn}>
-              LOG OUT
-            </button>
+            <>
+              <span className={styles.welcomeText}>
+                Welcome, {user.username}
+              </span>
+              <button onClick={handleLogout} className={styles.logoutBtn}>
+                LOG OUT
+              </button>
+            </>
           )}
         </nav>
       </div>

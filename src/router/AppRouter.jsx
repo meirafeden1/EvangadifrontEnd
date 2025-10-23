@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
   useLocation,
+  useParams,
 } from "react-router-dom";
 
 import Header from "../components/Header/Header";
@@ -15,6 +16,8 @@ import About from "../components/About/About";
 import QuestionPage from "../pages/QuestionPage";
 import AnswerPage from "../pages/AnswerPage";
 import { AuthContext } from "../context/AuthContext";
+import Answer from "../components/Answer/Answer";
+import HowItWorks from "../components/About/Howitworks/HowItWorks";
 
 // Protected Route wrapper
 const ProtectedRoute = ({ children }) => {
@@ -33,6 +36,13 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/auth/login" replace state={{ from: location }} />;
 
   return children;
+};
+
+// Redirect helper for legacy /question/:question_id links
+const RedirectToAnswer = () => {
+  const { question_id } = useParams();
+  if (!question_id) return <Navigate to="/home" />;
+  return <Navigate to={`/answer/${question_id}`} replace />;
 };
 
 const AppRouter = () => {
@@ -61,10 +71,11 @@ const AppRouter = () => {
 
         {/* About */}
         <Route path="/about" element={<About />} />
+        <Route path='/detail' element={<HowItWorks/> } />
 
-        {/* Question */}
+        {/* Question post page (Ask Question) */}
         <Route
-          path="/question/:question_id"
+          path="/question/post"
           element={
             <ProtectedRoute>
               <QuestionPage />
@@ -72,9 +83,20 @@ const AppRouter = () => {
           }
         />
 
-        {/*  Fixed Answer Page Route */}
+        {/* Legacy question route - redirect to answer page while preserving id */}
+        <Route path="/question/:question_id" element={<RedirectToAnswer />} />
         <Route
-          path="/answer/:question_id"
+          path="/questions/:questionId"
+          element={
+            <ProtectedRoute>
+              <AnswerPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Answer Page (canonical) */}
+        <Route
+          path="/answer/:questionId"
           element={
             <ProtectedRoute>
               <AnswerPage />

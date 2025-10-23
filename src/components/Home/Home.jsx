@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Home.module.css";
+import Question from "../Question/Question";
 
 const Home = ({ currentUser, questions }) => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Home = ({ currentUser, questions }) => {
           Ask Question
         </button>
         <div className={styles.welcomeText}>
-          Welcome, {currentUser?.first_name || "Guest"}
+         <h3> Welcome : {currentUser?.username || "Guest"}</h3>
         </div>
       </div>
 
@@ -44,26 +45,7 @@ const Home = ({ currentUser, questions }) => {
       <section className={styles.usersSection}>
         {filteredQuestions.length > 0 ? (
           filteredQuestions.map((q) => (
-            <div
-              key={q.question_id}
-              className={styles.userRow}
-              onClick={() => navigate(`/question/${q.question_id}`)} // ✅ navigate to AnswerPage
-            >
-              <div className={styles.userInfo}>
-                <img
-                  src={q.user?.avatar || "/default-avatar.png"}
-                  alt={q.user?.first_name || "Anonymous"}
-                  className={styles.avatar}
-                />
-                <span className={styles.username}>
-                  {q.user?.first_name || "Anonymous"}
-                </span>
-                <span className={styles.questionPreview}>
-                  {q.title.length > 50 ? q.title.slice(0, 50) + "..." : q.title}
-                </span>
-              </div>
-              <button className={styles.detailButton}>&gt;</button>
-            </div>
+            <Question key={q.question_id || q.id} question={q} />
           ))
         ) : (
           <p>No questions found.</p>

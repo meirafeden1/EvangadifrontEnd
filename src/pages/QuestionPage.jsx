@@ -39,21 +39,53 @@ const QuestionPage = () => {
   };
 
   // Post a new question with message feedback
+  // const handlePostQuestion = async () => {
+  //   if (!newQuestion.title.trim() || !newQuestion.description.trim()) {
+  //     setMessage(" Please enter both title and description.");
+  //     return;
+  //   }
+
+  //   try {
+  //     setLoading(true);
+  //     setMessage("");
+  //     const res = await api.post("/question", newQuestion);
+  //     setQuestions((prev) => [res.data, ...prev]);
+  //     setNewQuestion({ title: "", description: "" });
+  //     setMessage(" Question posted successfully!");
+  //   } catch (err) {
+  //     // console.error(err);
+  //     console.error("Error posting question:", err);
+  //   console.log("Backend error response:", err.response);
+  //     setMessage(err.response?.data?.message || "❌ Failed to post question.");
+  //   } finally {
+  //     setLoading(false);
+
+  //     //  Clear message after 3 seconds
+  //     setTimeout(() => setMessage(""), 3000);
+  //   }
+  // };
+
+    // Post a new question with message feedback
   const handlePostQuestion = async () => {
     if (!newQuestion.title.trim() || !newQuestion.description.trim()) {
-      setMessage("⚠️ Please enter both title and description.");
+      setMessage(" Please enter both title and description.");
       return;
     }
 
     try {
       setLoading(true);
       setMessage("");
-      const res = await api.post("/question", newQuestion);
+      const res = await api.post("/question", newQuestion, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setQuestions((prev) => [res.data, ...prev]);
       setNewQuestion({ title: "", description: "" });
       setMessage(" Question posted successfully!");
     } catch (err) {
-      console.error(err);
+      console.error("Error posting question:", err);
+      console.log("Backend error response:", err.response);
       setMessage(err.response?.data?.message || "❌ Failed to post question.");
     } finally {
       setLoading(false);
@@ -62,6 +94,7 @@ const QuestionPage = () => {
       setTimeout(() => setMessage(""), 3000);
     }
   };
+
 
   const filteredQuestions = questions.filter((q) => {
     const matchTitle = q.title
@@ -78,10 +111,10 @@ const QuestionPage = () => {
       <div className={styles.stepsSection}>
         <h2>Steps to Write a Good Question</h2>
         <ul>
-          <li>➤ Be clear and concise</li>
-          <li>➤ Provide context and examples</li>
-          <li>➤ Check for duplicates</li>
-          <li>➤ Use proper tags</li>
+          <li> Be clear and concise</li>
+          <li> Provide context and examples</li>
+          <li> Check for duplicates</li>
+          <li> Use proper tags</li>
         </ul>
       </div>
 
